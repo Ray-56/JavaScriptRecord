@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>demo</title>
+    <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+</head>
+<body>
+    <script>
+        $(function() {
+    
+          var input = $('#J_input');
+    
+          //用来获取字数
+          function getNum(){
+            return input.val().length;
+          }
+    
+          //渲染元素
+          function render(){
+            var num = getNum();
+    
+            //没有字数的容器就新建一个
+            if ($('#J_input_count').length == 0) {
+              input.after('<span id="J_input_count"></span>');
+            };
+    
+            $('#J_input_count').html(num+'个字');
+          }
+    
+          //监听事件
+          input.on('keyup',function(){
+            render();
+          });
+    
+          //初始化，第一次渲染
+          render();
+    
+    
+        })
+      </script>
+      <input type="text" id="J_input"/>
+</body>
+</html>
