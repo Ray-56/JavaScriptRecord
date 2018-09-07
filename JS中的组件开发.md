@@ -698,5 +698,5 @@ var RichBase = Base.extend({
 ```
 主要做了两件事, 一个就是事情的解析跟代理, 全部代理到`parentNode`上面. 另外就是把`render`抽出来, 用户只需要实现`setUp`方法. 如果需要模板支持就在`setUp`里面调用`render`来渲染模板, 并且可以通过`setChuckdata`来刷新模板, 实现带向绑定. 
 
-[最终代码](./html/component.html)
+[最终代码](./html/component.html) </br>
 [原文](https://github.com/purplebamboo/blog/issues/16)
