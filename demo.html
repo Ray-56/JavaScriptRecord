@@ -29,53 +29,40 @@
             this._top = 0;
         }
     };
-    // 1 2 3 + 4 * + 5 -
-    const express = '1+((2+3)*4)-5';
-    // 成对
-    // 第一个不能为)
-    // ()中间不能为空
-    function fact(express) {
-        const s1 = new Stack(); // 操作符栈
-        const s2 = new Stack(); // 操作数栈
-        const arr = express.split('');
-        console.log(arr)
-        arr.forEach((i, index) => {
-            if(/^[0-9]*$/.test(i)) {
-                s2.push(i)
-            } else if(['+', '-', '*', '/'].includes(i)) {
-                if(s1.length() === 0 || s1.peek() === '(') {
-                    s1.push(i)
-                } else if (['*', '/'].includes(i) && ['+', '-'].includes(s1.peek())) {
-                    s1.push(i)
-                } else {
-                    s2.push(s1.pop());
-                    if(s1.length() === 0 || s1.peek() === '(') {
-                        s1.push(i);
-                    }
-                }
-            } else if (i === '(') {
-                s1.push(i);
-            } else if (i === ')') {
-                while(s1.peek() !== '(') {
-                    s2.push(s1.pop());
-                }
-                s1.pop();
+    
+
+    const boxS = new Stack(); 
+    boxS.push('red');
+    boxS.push('yellow');
+    boxS.push('white');
+    boxS.push('white');
+    boxS.push('yellow');
+    boxS.push('yellow');
+    boxS.push('red');
+    boxS.push('red');
+    boxS.push('white');
+    boxS.push('yellow');
+    boxS.push('red');
+
+    function changeFn(sourceStack) {
+        const s1 = new Stack(); 
+        const s2 = new Stack(); 
+        const resultS = new Stack(); 
+
+        while(sourceStack.length() > 0) {
+            if(sourceStack.peek() === 'yellow') {
+                s1.push(sourceStack.pop())
+            } else {
+                s2.push(sourceStack.pop())
             }
-        });
-        
-        while(s1.length() > 0) {
-            s2.push(s1.pop());
         };
 
-        let str = ''
         while(s2.length() > 0) {
-            str += ` ${s2.pop()}`;
+            resultS.push(s2.pop());
         };
-        
-        return str;
+        return resultS;
     };
-
-    console.log(fact(express))
+    changeFn(boxS)
 </script>
 <body>
     
