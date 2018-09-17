@@ -7,62 +7,105 @@
     <title>Document</title>
 </head>
 <script >
-    class Stack {
+    class Queue {
         constructor() {
             this._dataStore = [];
-            this._top = 0;
         }
-        push(element) {
-            this._dataStore[this._top++] = element;
+        enqueue(element) {
+            this._dataStore.push(element);
         }
-        pop(element) {
-            let t = --this._top;
-            return this._dataStore[t];
+        dequeue(element) {
+            let entry = 0;
+            this._dataStore.forEach((i, index) => {
+                if(i.code > this._dataStore[entry].code) {
+                    entry = index;
+                }
+            });
+            return this._dataStore.splice(entry, 1);
         }
-        peek() {
-            return this._dataStore[this._top - 1];
+        front() {
+            return this._dataStore[0];
         }
-        length() {
-            return this._top;
+        back() {
+            return this._dataStore[this._dataStore.length - 1];
         }
-        clear() {
-            this._top = 0;
+        toString() {
+            var str = '';
+            this._dataStore.forEach(i => {
+                str += i.name + ' code:' + i.code + '\n';
+            });
+            return str;
+        }
+        empty() {
+            if(this._dataStore.length) {
+                return false;
+            };
+            return true;
+        }
+        count() {
+            return this._dataStore.length;
         }
     };
-    
 
-    const boxS = new Stack(); 
-    boxS.push('red');
-    boxS.push('yellow');
-    boxS.push('white');
-    boxS.push('white');
-    boxS.push('yellow');
-    boxS.push('yellow');
-    boxS.push('red');
-    boxS.push('red');
-    boxS.push('white');
-    boxS.push('yellow');
-    boxS.push('red');
+/* function Patient(name, code) {
+    this.name = name;
+    this.code = code;
+};
+const ed = new Queue();
+ed.enqueue(new Patient('病患1', 5))
+ed.enqueue(new Patient('病患1-1', 5))
+ed.enqueue(new Patient('病患3', 6))
+ed.enqueue(new Patient('病患4', 1))
+ed.enqueue(new Patient('病患5', 1))
+console.log(ed.toString())
+const seen = ed.dequeue();
+console.log('出队病患 =>', seen[0].name)
+console.log(ed.toString())
 
-    function changeFn(sourceStack) {
-        const s1 = new Stack(); 
-        const s2 = new Stack(); 
-        const resultS = new Stack(); 
+const seen1 = ed.dequeue();
+console.log('出队病患 =>', seen1[0].name)
+console.log(ed.toString())
 
-        while(sourceStack.length() > 0) {
-            if(sourceStack.peek() === 'yellow') {
-                s1.push(sourceStack.pop())
-            } else {
-                s2.push(sourceStack.pop())
-            }
-        };
+const seen2 = ed.dequeue();
+console.log('出队病患 =>', seen2[0].name)
+console.log(ed.toString()) */
 
-        while(s2.length() > 0) {
-            resultS.push(s2.pop());
-        };
-        return resultS;
-    };
-    changeFn(boxS)
+class Room {
+    constructor() {
+        this._q = new Queue();
+    }
+    // 患者进入候诊室 code值越大 优先级越高
+    enter(name, code) {
+        this._q.enqueue({
+            name, code
+        });
+    }
+    // 患者就诊 也是就是从候诊室队列中出队
+    seeDoctor() {
+        return this._q.dequeue()[0].name;
+    }
+    // 显示等待就诊患者名单
+    showRoom() {
+        return this._q.toString();
+    }
+};
+
+const r = new Room();
+r.enter('患者1', 2);
+r.enter('患者2', 3);
+r.enter('患者3', 1);
+r.enter('患者4', 4);
+r.enter('患者5', 4);
+r.enter('患者6', 5);
+console.log(r.showRoom())
+console.log(r.seeDoctor(), '   就诊')
+console.log(r.seeDoctor(), '   就诊')
+console.log(r.showRoom())
+console.log(r.seeDoctor(), '   就诊')
+console.log(r.showRoom())
+
+
+
 </script>
 <body>
     
