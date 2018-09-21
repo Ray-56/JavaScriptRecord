@@ -7,104 +7,98 @@
     <title>Document</title>
 </head>
 <script >
-    class Queue {
-        constructor() {
-            this._dataStore = [];
-        }
-        enqueue(element) {
-            this._dataStore.push(element);
-        }
-        dequeue(element) {
-            let entry = 0;
-            this._dataStore.forEach((i, index) => {
-                if(i.code > this._dataStore[entry].code) {
-                    entry = index;
-                }
-            });
-            return this._dataStore.splice(entry, 1);
-        }
-        front() {
-            return this._dataStore[0];
-        }
-        back() {
-            return this._dataStore[this._dataStore.length - 1];
-        }
-        toString() {
-            var str = '';
-            this._dataStore.forEach(i => {
-                str += i.name + ' code:' + i.code + '\n';
-            });
-            return str;
-        }
-        empty() {
-            if(this._dataStore.length) {
-                return false;
-            };
-            return true;
-        }
-        count() {
-            return this._dataStore.length;
-        }
-    };
-
-/* function Patient(name, code) {
-    this.name = name;
-    this.code = code;
+window.log = console.log.bind(console)
+class Node {
+    constructor(element) {
+        this.element = element;
+        this.next = null;
+    }
 };
-const ed = new Queue();
-ed.enqueue(new Patient('病患1', 5))
-ed.enqueue(new Patient('病患1-1', 5))
-ed.enqueue(new Patient('病患3', 6))
-ed.enqueue(new Patient('病患4', 1))
-ed.enqueue(new Patient('病患5', 1))
-console.log(ed.toString())
-const seen = ed.dequeue();
-console.log('出队病患 =>', seen[0].name)
-console.log(ed.toString())
 
-const seen1 = ed.dequeue();
-console.log('出队病患 =>', seen1[0].name)
-console.log(ed.toString())
-
-const seen2 = ed.dequeue();
-console.log('出队病患 =>', seen2[0].name)
-console.log(ed.toString()) */
-
-class Room {
+class LList {
     constructor() {
-        this._q = new Queue();
+        this._head = new Node('head');
+        this._head.next = this._head;
+        this.currentNode = this._head;
     }
-    // 患者进入候诊室 code值越大 优先级越高
-    enter(name, code) {
-        this._q.enqueue({
-            name, code
-        });
+    _find(item) {
+        let currNode = this._head;
+        while (currNode.element != item) {
+            currNode = currNode.next;
+        };
+        return currNode;
     }
-    // 患者就诊 也是就是从候诊室队列中出队
-    seeDoctor() {
-        return this._q.dequeue()[0].name;
+    _findPrevious(item) {
+        let currNode = this._head;
+        while (currNode.next !== null && currNode.next.element !== item) {
+            currNode = currNode.next;
+        };
+        return currNode;  
     }
-    // 显示等待就诊患者名单
-    showRoom() {
-        return this._q.toString();
+    insert(newElement, item) {
+        const newNode = new Node(newElement);
+        const current = this._find(item);
+        newNode.next = current.next;
+        current.next = newNode;
+    }
+    remove(item) {
+        const prevNode = this._findPrevious(item);
+        if (prevNode.next !== null) {
+            prevNode.next = prevNode.next.next
+        }
+    }
+    // 前移
+    advance(n) {
+        while ( n ) {
+            if(this.currentNode.next.element == 'head') {
+                this.currentNode = this.currentNode.next.next;
+            } else {
+                this.currentNode = this.currentNode.next;
+            } 
+            n--;
+        };
+    }
+    show() {
+        return this.currNode;
+    }
+    count() {
+        let currNode = this._head;
+        let i = 0;
+        while (currNode.next.element != 'head') {
+            currNode = currNode.next;
+            ++i
+        };
+        
+        return i;
+    }
+    display() {
+        let currNode = this._head;
+        
+        while (currNode.next !== null && currNode.next.element !== 'head') {
+            console.log(currNode.next.element);
+            currNode = currNode.next;
+        }
     }
 };
 
-const r = new Room();
-r.enter('患者1', 2);
-r.enter('患者2', 3);
-r.enter('患者3', 1);
-r.enter('患者4', 4);
-r.enter('患者5', 4);
-r.enter('患者6', 5);
-console.log(r.showRoom())
-console.log(r.seeDoctor(), '   就诊')
-console.log(r.seeDoctor(), '   就诊')
-console.log(r.showRoom())
-console.log(r.seeDoctor(), '   就诊')
-console.log(r.showRoom())
+const p = new LList();
 
+const peopleNum = 40;
+for(let i = 1; i <= peopleNum; i++) {
+    if(i === 1) {
+        p.insert(`people${i}`, 'head');
+    } else {
+        p.insert(`people${i}`, `people${i - 1}`);
+    }
+};
 
+p.display();
+while (p.count() > 2) {
+    p.advance(3);
+    p.remove(p.currentNode.element);
+    log('/////////////////')
+    p.display();
+}
 
 </script>
 <body>
