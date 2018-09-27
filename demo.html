@@ -8,97 +8,172 @@
 </head>
 <script >
 window.log = console.log.bind(console)
-class Node {
-    constructor(element) {
-        this.element = element;
-        this.next = null;
-    }
-};
 
-class LList {
-    constructor() {
-        this._head = new Node('head');
-        this._head.next = this._head;
-        this.currentNode = this._head;
-    }
-    _find(item) {
-        let currNode = this._head;
-        while (currNode.element != item) {
-            currNode = currNode.next;
-        };
-        return currNode;
-    }
-    _findPrevious(item) {
-        let currNode = this._head;
-        while (currNode.next !== null && currNode.next.element !== item) {
-            currNode = currNode.next;
-        };
-        return currNode;  
-    }
-    insert(newElement, item) {
-        const newNode = new Node(newElement);
-        const current = this._find(item);
-        newNode.next = current.next;
-        current.next = newNode;
-    }
-    remove(item) {
-        const prevNode = this._findPrevious(item);
-        if (prevNode.next !== null) {
-            prevNode.next = prevNode.next.next
-        }
-    }
-    // 前移
-    advance(n) {
-        while ( n ) {
-            if(this.currentNode.next.element == 'head') {
-                this.currentNode = this.currentNode.next.next;
-            } else {
-                this.currentNode = this.currentNode.next;
-            } 
-            n--;
-        };
+class Node {
+    constructor(data, left = null, right = null) {
+        this.data = data;
+        this.count = 1;
+        this.left = left;
+        this.right = right;
     }
     show() {
-        return this.currNode;
+        return this.data;
     }
-    count() {
-        let currNode = this._head;
-        let i = 0;
-        while (currNode.next.element != 'head') {
-            currNode = currNode.next;
-            ++i
+};
+
+class BST {
+    constructor() {
+        this.root = null;
+    }
+    getMin() {
+        let current = this.root;
+        while (current.left !== null) {
+            current = current.left;
         };
-        
-        return i;
+
+        return current.data;
     }
-    display() {
-        let currNode = this._head;
+    getMax() {
+        let current = this.root;
+        while (current.right !== null) {
+            current = current.right;
+        };
+
+        return current.data;
+    }
+    find(data) {
+        let current = this.root;
+        while (current !== null) {
+            if (current.data === data) {
+                return current;
+            } else if (data < current.data) {
+                current = current.left;
+            } else if (data > current.data) {
+                current = current.right;
+            }
+        };
+
+        return null;
+    }
+    update(data) {
+        const grade = this.find(data);
+        grade.count++;
+
+        return grade;
+    }
+    remove(data) {
+        this.root = removeNode(this.root, data);
+    }
+    insert(data) {
+        const n = new Node(data);
         
-        while (currNode.next !== null && currNode.next.element !== 'head') {
-            console.log(currNode.next.element);
-            currNode = currNode.next;
+        if(this.root === null) {
+            this.root = n;
+        } else {
+            let current = this.root;
+            let parent;
+            while(true) {
+                parent = current;
+                if(data < current.data) {
+                    current = current.left;
+                    if(current === null) {
+                        parent.left = n;
+                        break;
+                    }
+                } else {
+                    current = current.right;
+                    if(current === null) {
+                        parent.right = n;
+                        break
+                    }
+                }
+            }
         }
     }
+    
 };
 
-const p = new LList();
-
-const peopleNum = 40;
-for(let i = 1; i <= peopleNum; i++) {
-    if(i === 1) {
-        p.insert(`people${i}`, 'head');
+function inOrder(node) {
+    if (node !== null) {
+        inOrder(node.left);
+        log(node.show() + ' ')
+        inOrder(node.right)
+    }
+};
+function preOrder(node) {
+    if (node !== null) {
+        log(node.show() + ' ');
+        preOrder(node.left);
+        preOrder(node.right);
+    }
+};
+function postOrder(node) {
+    if (node !== null) {
+        postOrder(node.left);
+        postOrder(node.right);
+        log(node.show() + ' ');
+    }
+};
+function removeNode(node, data) {
+    if (node === null) {
+        return null;
+    };
+    if (data === node.data) {
+        // 没有子节点的节点
+        if (node.left === null && node.right === null) {
+            return null;
+        };
+        // 没有左子节点的节点
+        if (node.left === null) {
+            return node.right;
+        };
+        // 没有右子节点的节点
+        if (node.right === null) {
+            return node.left;
+        };
+        // 有两个子节点的节点
+        const tempNode = getSmallest(node.right);
+        node.data = tempNode.data;
+        node.right = removeNode(node.right, tempNode.data);
+        return node;
+    } else if (data < node.data) {
+        node.left = removeNode(node.left, data);
+        return node;
     } else {
-        p.insert(`people${i}`, `people${i - 1}`);
+        node.right = removeNode(node.right, data);
+        return node;
     }
 };
 
-p.display();
-while (p.count() > 2) {
-    p.advance(3);
-    p.remove(p.currentNode.element);
-    log('/////////////////')
-    p.display();
+// 产生随机成绩
+function genArray(length) {
+    const arr = [];
+    for(let i = 0; i < length; i++) {
+        arr[i] = Math.floor(Math.random() * 101);
+    };
+    return arr;
+};
+
+const grades = genArray(100);
+log(grades);
+
+const bst = new BST();
+grades.forEach(i => {
+    const grade = bst.find(i);
+    if (grade) {
+        bst.update(i)
+    } else {
+        bst.insert(i)
+    }
+});
+
+const aGrade = bst.find(33);
+if (aGrade) {
+    log(`33出现的次数为: ${aGrade.count}`)
+} else {
+    log(`未出现33`)
 }
+
 
 </script>
 <body>
