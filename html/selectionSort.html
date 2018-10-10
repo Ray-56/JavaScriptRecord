@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>选择排序</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<script >
+window.log = console.log.bind(console);
+
+// 渲染dom以及排序过程
+class DomRun {
+    // 随机颜色
+    randomRgbColor(val) {
+        const r = Math.floor(256 - (val / (this.numElements + 1) * 256)); // 随机生成256以内r值
+        const g = Math.floor(200 - (val / (this.numElements + 1) * 256)); // 随机生成256以内g值
+        const b = Math.floor(100 - (val / (this.numElements + 1) * 256)); // 随机生成256以内b值
+        return `rgb(${r},${g},${b})`; // 返回rgb(r,g,b)格式颜色
+    }
+    render() {
+        let liList = '';
+        this.dataStore.forEach((i, index) => {
+            liList += `<li data-index="${i}" style="left: ${index * 40}px">
+                        <div class="liTop" style="background: ${this.randomRgbColor(i)}; height: ${i * 10}px"></div>
+                        <div class="liBottom">${i}</div>
+                    </li>`
+        });
+        $('.bar').html(liList);
+    }
+};
+
+class CArray extends DomRun {
+    constructor(numElements) {
+        super();
+        this.numElements = numElements;
+        this.dataStore = [];
+        this.pos = 0;
+        for (let i = 0; i < numElements; i++) {
+            this.dataStore[i] = i;
+        };
+    }
+    setData() {
+        for (let i = 0; i < this.numElements; i++) {
+            this.dataStore[i] = Math.floor(Math.random() * (this.numElements + 1));
+        };
+    }
+    clear() {
+        for (let i = 0; i < this.numElements; i++) {
+            this.dataStore[i] = 0;
+        }
+    }
+    insert(element) {
+        this.dataStore[this.pos++] = element;
+    }
+    toString() {
+        let restr = '';
+        for (let i = 0; i < this.dataStore.length; ++i) {
+            restr += this.dataStore[i] + ' ';
+            if (i > 0 && (i + 1) % 10 === 0) {
+                restr += '\n';
+            };
+        };
+
+        return restr;
+    }
+    async swap(arr, index1, index2) {
+        return new Promise((res, rej) => {
+            const temp = arr[index1];
+            arr[index1] = arr[index2];
+            arr[index2] = temp;
+
+            const left1 = index1 * 40 + 'px';
+            const left2 = index2 * 40 + 'px';
+            $(`li:eq(${index1})`).css({left: left2}).on('webkitTransitionEnd', () => {this.render();});
+            $(`li:eq(${index2})`).css({left: left1});
+            setTimeout(() => {
+                res(true)
+            }, 1000)
+        });
+    }
+    // 冒泡排序
+    async bubbleSort() {
+        for (let i = 0; i < this.dataStore.length; i++) { // 外循环多少次
+            for (let j = 0; j < this.dataStore.length - i - 1; j++) { // 每一次外循环时比较多少次内循环
+                if(this.dataStore[j] > this.dataStore[j + 1]) {
+                    let res = await this.swap(this.dataStore, j, j + 1);
+                }
+            };
+            log(this.toString())
+        };
+        log(this.toString())
+    }
+    // 选择排序
+    async selectionSort() {
+        let min;
+        const { length } = this.dataStore;
+        for (let outer = 0; outer < length - 1; outer++) { // 外循环多少次
+            min = outer;
+            for (let inner = outer + 1; inner < length; inner++) { // 每一次外循环时比较多少次内循环
+                if(this.dataStore[inner] < this.dataStore[min]) {
+                    min = inner;
+                };
+            };
+            await this.swap(this.dataStore, outer, min);
+            log(this.toString())
+        };
+
+        log('最终:' + this.toString())
+    }
+};
+
+const numElements = 10;
+const myNums = new CArray(numElements);
+myNums.setData();
+log(myNums.toString());
+myNums.selectionSort();
+
+$(function() {
+    myNums.render();
+});
+
+</script>
+<body>
+    <h1>选择排序</h1>
+    <ul class="bar">
+
+    </ul>
+</body>
+<style>
+    h1{text-align: center}
+    .bar{
+        border: 1px solid #ccc; height: 200px; list-style: none; width: 500px; padding: 10px; margin: 0 auto; position: relative; 
+    }
+    .bar li {
+        width: 20px; transition: all .5s; position: absolute; bottom: 0;
+    }
+    .bar li .liBottom {
+        text-align: center;
+    }
+</style>
+</html>
