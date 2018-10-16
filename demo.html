@@ -2,10 +2,57 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script>
+        (function flexible (window, document) {
+            var docEl = document.documentElement
+            var dpr = window.devicePixelRatio || 1
+
+            // adjust body font size
+            function setBodyFontSize () {
+                if (document.body) {
+                document.body.style.fontSize = (12 * dpr) + 'px'
+                }
+                else {
+                document.addEventListener('DOMContentLoaded', setBodyFontSize)
+                }
+            }
+            setBodyFontSize();
+
+            // set 1rem = viewWidth / 10
+            function setRemUnit () {
+                var rem = docEl.clientWidth / 10
+                docEl.style.fontSize = rem + 'px'
+            }
+
+            setRemUnit()
+
+            // reset rem unit on page resize
+            window.addEventListener('resize', setRemUnit)
+            window.addEventListener('pageshow', function (e) {
+                if (e.persisted) {
+                setRemUnit()
+                }
+            })
+
+            // detect 0.5px supports
+            if (dpr >= 2) {
+                var fakeBody = document.createElement('body')
+                var testElement = document.createElement('div')
+                testElement.style.border = '.5px solid transparent'
+                fakeBody.appendChild(testElement)
+                docEl.appendChild(fakeBody)
+                if (testElement.offsetHeight === 1) {
+                docEl.classList.add('hairlines')
+                }
+                docEl.removeChild(fakeBody)
+            }
+        }(window, document))
+    </script>
 </head>
 <script >
 window.log = console.log.bind(console)
@@ -56,11 +103,11 @@ class CArray {
                     this.swap(this.dataStore, j, j + 1);
                 }
             };
-            log(this.toString())
+            // log(this.toString())
         }
     }
     // 选择排序
-    async selectionSort() {
+    selectionSort() {
         let min;
         const { length } = this.dataStore;
         for (let outer = 0; outer < length - 1; outer++) { // 外循环多少次
@@ -71,19 +118,51 @@ class CArray {
                 };
             };
             this.swap(this.dataStore, outer, min);
-            log(this.toString())
+            // log(this.toString())
+        };
+    }
+    // 插入排序
+    insertionSort() {
+        let temp, inner;
+        for (let outer = 0; outer < this.dataStore.length; outer++) { // 外循环多少次
+            temp = this.dataStore[outer];
+            inner = outer;
+            while (inner > 0 && this.dataStore[inner - 1] > temp) {
+                this.dataStore[inner] = this.dataStore[inner - 1];
+                inner--;
+            };
+            this.dataStore[inner] = temp;
+            // log(this.toString())
         };
     }
 };
 
-const numElements = 10;
+const numElements = 10000;
 const myNums = new CArray(numElements);
 myNums.setData();
-log(myNums.toString());
+console.time('冒泡排序')
+myNums.bubbleSort();
+console.timeEnd('冒泡排序')
+
+myNums.setData();
+console.time('选择排序')
 myNums.selectionSort();
-log(myNums.toString());
+console.timeEnd('选择排序')
+
+myNums.setData();
+console.time('插入排序')
+myNums.insertionSort();
+console.timeEnd('插入排序')
 
 </script>
 <body>
+    <div></div>
 </body>
+<style>
+    div{
+        background: red;
+        width: 1rem;
+        height: 1rem;
+    }
+</style>
 </html>
