@@ -5,7 +5,7 @@
     <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>CSS 抛物线</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
 </head>
@@ -71,6 +71,7 @@ $(function() {
                 left: bowlLeft
             });
         }, 100);
+        
     });
 });
 </script>
@@ -99,7 +100,10 @@ $(function() {
         background: red;
         border-radius: 100px;
         opacity: .6;
+        /* transition: all 2s cubic-bezier(.55, 0, .85, .36);
+        left 1s linear, top 1s ease-in */
         transition: left 1s linear,  top 1s ease-in;
+        /* transition: top 1s ease-in; */
     }
     .y {
         position: absolute;
