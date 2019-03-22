@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>algorithms</title>
+    <script>
+        window.log = console.log.bind(console);
+        const arr = [100, 3, 6, 4, 66, 99, 22, 9, 0, 2];
+        
+        function bubbleSort(arr) {
+            for (let i = 0; i < arr.length; i++) {
+                for (let j = 0; j < arr.length - 1 - i; j++) {
+                    if (arr[j] > arr[j + 1]) {
+                        const temp = arr[j];
+                        arr[j] = arr[j + 1];
+                        arr[j + 1] = temp;
+                    }
+                }
+            }
+            console.log(arr);
+        }
+        bubbleSort(arr);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // function shellSort(arr) {
+        //     let len = arr.length;
+        //     let temp, j;
+        //     let gap = 1;
+        //     while (gap < len / 5) {
+        //         gap = gap * 5 + 1;
+        //     }
+        //     for (gap; gap > 0; gap = Math.floor(gap / 5)) {
+        //         for (let i = gap; i < len; i++) {
+        //             temp = arr[i];
+        //             for (j = i - gap; j >= 0 && arr[j] > temp; j -= gap) {
+        //                 arr[j + gap] = arr[j];
+        //             }
+        //             arr[j + gap] = temp;
+        //         }
+        //     }
+        //     log(arr);
+        // }
+        // shellSort(arr);
+    </script>
+</head>
+<body>
+    <h1>algorithms</h1>
+</body>
+</html>
