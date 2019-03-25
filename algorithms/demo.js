@@ -120,8 +120,10 @@ console.log(num);
 var sub = myObject.sub;
 sub();
 /*
-1.  1 3
-2.  3
-3.  4
-4.  4
+3
+5
+1
+2
+4
+0
 */
