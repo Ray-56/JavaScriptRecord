@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>防抖与节流</title>
+</head>
+<body>
+    <input type="text" placeholder="正常input事件" id="input"> <br />
+    <input type="text" placeholder="防抖后input事件" id="debounceInput"><br />
+    <input type="text" placeholder="节流后input事件" id="throttleInput">
+
+    <script>
+        const input = document.querySelector('#input');
+        const debounceInput = document.querySelector('#debounceInput');
+        const throttleInput = document.querySelector('#throttleInput');
+
+        input.addEventListener('input', e => {
+            console.log(e.target.value, new Date().toString());
+        });
+        debounceInput.addEventListener('input', e => {
+            debounceInstance(e);
+            // debounce(console.log(e.target.value), 500);
+        });
+        throttleInput.addEventListener('input', e => {
+            // console.log(e.target.value);
+            throttleInstance(e);
+        });
+
+        function throttle(fn, delay) {
+            let last, timeId;
+            return function(args) {
+                let self = this;
+                let now = new Date().getTime();
+
+                if (last && now < last + delay) {
+                    clearTimeout(timeId);
+                    timeId = setTimeout(() => {
+                        last = now;
+                        fn.apply(self, arguments);
+                    }, delay);
+                } else {
+                    last = now;
+                    fn.apply(self, arguments);
+                }
+            }
+        }
+
+        const throttleInstance = throttle(e => console.log(e.target.value, new Date().toString()), 1000);
+    </script>
+</body>
+</html>

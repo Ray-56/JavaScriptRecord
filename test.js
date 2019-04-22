@@ -1,51 +1,78 @@
-const classRoom = {
-    students: ['武大', '郎二', '张三', '张起灵', '李四', '王五'],
-}
 
-// classRoom.find = function() {
-//     switch(arguments.length) {
-//         case 0:
-//             return this.students;
-//         case 1:
-//             return this.students.filter(student => {
-//                 let surname = arguments[0];
-//                 return ~student.indexOf(surname);
-//             });
-//         case 2:
-//             return this.students.filter(student => {
-//                 let fullName = arguments.join('');
-//                 return ~student.indexOf(fullName);
-//             });
-//     }
-// }
-function addMethod(target, name, fn) {
-    const old = target[name];
 
-    target[name] = function() {
-        if (fn.length === arguments.length) {
-            return fn.apply(this, arguments);
-        } else if (typeof old === 'function') {
-            return old.apply(this, arguments);
+class LazyManClass { // class 使用
+    constructor(name) {
+        this.name = name;
+        this.taskQueue = []; // 队列
+        console.log(`Hi I am ${name}`);
+
+        // 执行栈 eventLoop
+        setTimeout(() => {
+            this.next();
+        }, 0);
+    }
+
+    sleep(time) {
+        const timeout = time * 1000;
+        const fn = () => { // this 指向
+            setTimeout(() => {
+                console.log(`等待了${time}秒...`);
+                this.next();
+            }, timeout);
         }
+        this.taskQueue.push(fn);
+        return this; // 链式调用
+    }
+
+    sleepFirst(time) {
+        const timeout = time * 1000;
+        const fn = () => {
+            setTimeout(() => {
+                console.log(`等待了${time}秒...`);
+                this.next();
+            }, timeout);
+        }
+        this.taskQueue.unshift(fn);
+        return this;
+    }
+
+    eat(foodName) {
+        const fn = () => {
+            console.log(`I am eating ${foodName}`);
+            this.next();
+        }
+        this.taskQueue.push(fn);
+        return this;
+    }
+
+    next() {
+        const fn = this.taskQueue.shift();
+        fn && fn(); // 防错机制
     }
 }
 
-addMethod(classRoom, 'find', function() {
-    return this.students;
-});
+function LazyMan(name) {
+    return new LazyManClass(name);
+}
 
-addMethod(classRoom, 'find', function(surname) {
-    return this.students.filter(student => {
-        return ~student.indexOf(surname);
-    });
-});
+// LazyMan('Tony1');
+// Hi I am Tony
 
-addMethod(classRoom, 'find', function(surname, personalName) {
-    return this.students.filter(student => {
-        return ~student.indexOf(surname + personalName);
-    });
-});
+// LazyMan('Tony2').sleep(10).eat('lunch');
+// Hi I am Tony
+// 等待了10秒...
+// I am eating lunch
 
-console.log(classRoom.find());
-console.log(classRoom.find('张'));
-console.log(classRoom.find('三'));
+// LazyMan('Tony3').eat('lunch').sleep(10).eat('dinner');
+// Hi I am Tony
+// I am eating lunch
+// 等待了10秒...
+// I am eating diner
+
+LazyMan('Tony').eat('lunch').eat('dinner').sleepFirst(5).sleep(10).eat('junk food');
+// Hi I am Tony
+// 等待了5秒...
+// I am eating lunch
+// I am eating dinner
+// 等待了10秒...
+// I am eating junk food

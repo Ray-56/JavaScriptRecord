@@ -50,6 +50,7 @@
 1.  es6 promise 实现
 1.  promise.all() 与 promise.race()
 1.  promise 如何实现 .finally()
+1.  NaN 代表什么
 
 ## node
 
