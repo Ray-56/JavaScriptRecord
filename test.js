@@ -1,78 +1,69 @@
+// const data = [
+//     { goodsId: 1, name: '货品1', sku: '颜色:红色,尺码:S', number: 1 },
+//     { goodsId: 1, name: '货品1', sku: '颜色:红色,尺码:M', number: 1 },
+//     { goodsId: 1, name: '货品1', sku: '颜色:红色,尺码:L', number: 1 },
+//     { goodsId: 3, name: '货品3', number: 10 },
+//     { goodsId: 2, name: '货品2', sku: '颜色:绿色,尺码:S', number: 1 },
+//     { goodsId: 2, name: '货品2', sku: '颜色:绿色,尺码:M', number: 1 },
+//     { goodsId: 2, name: '货品2', sku: '颜色:绿色,尺码:L', number: 1 },
+// ];
+
+// /**
+// * res
+// [
+//     { goodsId: 1, name: '货品1', '颜色': '红色', 'S': 1, 'M': 1, 'L': 1, number: 3 },
+//     { goodsId: 2, name: '货品2', '颜色': '绿色', 'S': 1, 'M': 1, 'L': 1, number: 3 },
+// ]
+// */
 
 
-class LazyManClass { // class 使用
-    constructor(name) {
-        this.name = name;
-        this.taskQueue = []; // 队列
-        console.log(`Hi I am ${name}`);
+// const map = {};
+// data.forEach((item, index) => {
+//     if (Reflect.has(item, 'sku') && item.sku) {
+//         const skuList = item.sku.split(',');
+//         const firstSku = skuList.splice(0, 1);
+//         const newItem = Object.assign(item, { sku: skuList.join(',') })
+//         if (!Reflect.has(map, firstSku)) {
+//             map[firstSku] = [newItem];
+//         } else {
+//             map[firstSku].push(newItem);
+//         }
+//     } else {
+//         map[`__${index}_${item.goodsId}`] = [item];
+//     }
+    
+// });
+// console.log(map);
 
-        // 执行栈 eventLoop
-        setTimeout(() => {
-            this.next();
-        }, 0);
+// const res = [];
+// for (let key in map) {
+//     const value = map[key];
+//     if (!key.startsWith('__')) {
+//         const [firstSkuKey, firstSkuValue] = key.split(':');
+//         let skuData = { [firstSkuKey]: firstSkuValue };
+//         let number = 0;
+//         value.forEach(item => {
+//             number += item.number;
+//             const [skuKey, skuValue] = item.sku.split(':');
+//             skuData[skuValue] = item.number;
+//         });
+//         skuData.number = number;
+
+//         res.push(Object.assign({}, value[0], skuData));
+//     } else {
+//         res.push(value[0]);
+//     }
+// }
+// console.log(res);
+
+const str = 'aaabbbcccddd';
+function findIndex(s, t) {
+    if (s.length < t.length) return -1;
+
+    console.log(s.substr(0, t.length));
+    for (let i = 0; i < s.length - t.length; i++) {
+        if (s.substr(i, t.length) === t) return i;
     }
-
-    sleep(time) {
-        const timeout = time * 1000;
-        const fn = () => { // this 指向
-            setTimeout(() => {
-                console.log(`等待了${time}秒...`);
-                this.next();
-            }, timeout);
-        }
-        this.taskQueue.push(fn);
-        return this; // 链式调用
-    }
-
-    sleepFirst(time) {
-        const timeout = time * 1000;
-        const fn = () => {
-            setTimeout(() => {
-                console.log(`等待了${time}秒...`);
-                this.next();
-            }, timeout);
-        }
-        this.taskQueue.unshift(fn);
-        return this;
-    }
-
-    eat(foodName) {
-        const fn = () => {
-            console.log(`I am eating ${foodName}`);
-            this.next();
-        }
-        this.taskQueue.push(fn);
-        return this;
-    }
-
-    next() {
-        const fn = this.taskQueue.shift();
-        fn && fn(); // 防错机制
-    }
+    return -1;
 }
-
-function LazyMan(name) {
-    return new LazyManClass(name);
-}
-
-// LazyMan('Tony1');
-// Hi I am Tony
-
-// LazyMan('Tony2').sleep(10).eat('lunch');
-// Hi I am Tony
-// 等待了10秒...
-// I am eating lunch
-
-// LazyMan('Tony3').eat('lunch').sleep(10).eat('dinner');
-// Hi I am Tony
-// I am eating lunch
-// 等待了10秒...
-// I am eating diner
-
-LazyMan('Tony').eat('lunch').eat('dinner').sleepFirst(5).sleep(10).eat('junk food');
-// Hi I am Tony
-// 等待了5秒...
-// I am eating lunch
-// I am eating dinner
-// 等待了10秒...
-// I am eating junk food
+console.log(findIndex(str, 'bbb'));

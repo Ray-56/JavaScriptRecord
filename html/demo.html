@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Demo</title>
+</head>
+<body>
+        <button id="login">login</button>
+</body>
+<script>
+var createLoginLayer = (function() {
+    var div;
+    return function() {
+        if (!div) {
+            var div = document.createElement('div');
+            div.innerHTML = 'I`m login layer';
+            div.style.display = 'none';
+            document.body.appendChild(div);
+        }
+        return div;
+    }
+})();
+
+var getSingle = function(fn) {
+    var res;
+    return function() {
+        res || (res = fn.apply(this, arguments));
+        return res;
+    }
+}
+
+var createSingleLoginLayer = getSingle(createLoginLayer);
+
+document.querySelector('#login').onclick = function() {
+    var loginLayer = createSingleLoginLayer()
+    loginLayer.style.display = 'block'
+}
+</script>
+</html>
