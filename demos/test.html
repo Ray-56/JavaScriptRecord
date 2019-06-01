@@ -7,9 +7,10 @@
     <title>Demo</title>
 </head>
 <body>
-        <button id="login">login</button>
+    <button id="login" data-demo="供..数值+2">login</button>
 </body>
 <script>
+console.log(document.querySelector(`[data-demo='供..数值+2']`))
 var createLoginLayer = (function() {
     var div;
     return function() {

@@ -1,0 +1,42 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>瀑布流布局</title>
+    <style>
+        section {
+            width: 400px; display: flex; flex-flow: column wrap;
+        }
+        section > div {
+            width: 100px;
+        }
+        .item1 { background: #FA6F6B; height: 100px }
+        .item2 { background: #FA9B6B; height: 140px }
+        .item3 { background: #FACF6B; height: 70px }
+        .item4 { background: #FAED6B; height: 130px }
+        .item5 { background: #C0FA6B; height: 200px }
+        .item6 { background: #87FA6B; height: 70px }
+        .item7 { background: #6BFACF; height: 90px }
+        .item8 { background: #6BE9FA; height: 180px }
+        .item9 { background: #6BC2FA; height: 240px }
+        .item10 { background: #6B85FA; height: 10px }
+    </style>
+</head>
+<body>
+    <section>
+        <div class="item1"></div>
+        <div class="item2"></div>
+        <div class="item3"></div>
+        <div class="item4"></div>
+        <div class="item5"></div>
+        <div class="item6"></div>
+        <div class="item7"></div>
+        <div class="item8"></div>
+        <div class="item9"></div>
+        <div class="item10"></div>
+    </section>
+</body>
+</html>

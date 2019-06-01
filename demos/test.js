@@ -56,14 +56,87 @@
 // }
 // console.log(res);
 
-const str = 'aaabbbcccddd';
-function findIndex(s, t) {
-    if (s.length < t.length) return -1;
+// add(1)(2)
 
-    console.log(s.substr(0, t.length));
-    for (let i = 0; i < s.length - t.length; i++) {
-        if (s.substr(i, t.length) === t) return i;
+
+// function removeZero(arr) {
+//     let i = 0;
+//     let j = 0;
+
+//     while (j < arr.length) {
+//         console.log(j);
+//         if (arr[i] === 0) {
+//             if (arr[j] !== 0) {
+//                 [arr[i], arr[j]] = [arr[j], arr[i]];
+//                 i++;
+//             }
+//         } else {
+//             i++
+//         }
+//         j++
+//     }
+//     console.log(arr);
+// }
+
+// removeZero([0, 1, 0, 3, 12]);
+
+// 产品类
+class Product {
+    showProduct() {
+        console.log('name:', this._name);
+        console.log('name:', this._type);
     }
-    return -1;
+    setName(name) {
+        this._name = name;
+    }
+    setType(type) {
+        this._type = type;
+    }
 }
-console.log(findIndex(str, 'bbb'));
+
+// 抽象建造者
+class Abstract {
+    constructor() {
+        if (new.target === Abstract) {
+            throw new TypeError('class Abstract该类为抽象类，不能实例化。')
+        }
+    }
+    setPart(arg1, arg2) {}
+    getProduct() {}
+}
+
+// 建造者
+class ConcreteBuilder extends Abstract {
+    constructor() {
+        super();
+        this._product = new Product();
+    }
+
+    getProduct() {
+        return this._product;
+    }
+
+    setPart(arg1, arg2) {
+        this._product.setName(arg1);
+        this._product.setType(arg2);
+    }
+}
+
+// 指挥者
+class Director {
+    constructor() {
+        this._builder = new ConcreteBuilder();
+    }
+    getProduct1() {
+        this._builder.setPart('奔驰', 'C200');
+        return this._builder.getProduct();
+    }
+    getProduct2() {
+        this._builder.setPart('奥迪', 'A8');
+        return this._builder.getProduct();
+    }
+}
+
+const director = new Director();
+console.log(director.getProduct1());
+console.log(director.getProduct2());

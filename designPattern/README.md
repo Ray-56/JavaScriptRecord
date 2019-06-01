@@ -13,16 +13,16 @@
 ### 第一种
 
 创建型模式
-- [单例模式Singleton](./1.单例模式Singleton.md)：
-    保证一个类仅有一个实例，并提供一个访问它的全局访问点。☑
+- [单例模式Singleton](./1.单例模式Singleton.md)：☑  
+    保证一个类仅有一个实例，并提供一个访问它的全局访问点。
 
-- [抽象工厂模式AbstractFactory]()：
+- [抽象工厂模式AbstractFactory](./4.工厂模式FactoryMethod.md)：☑   
     提供一个创建一系列相关或相互依赖对象的接口，而无需指定它们具体的类。
 
-- [建造者模式Builder]()：
+- [建造者模式Builder](./5.建造者模式Builder.md)：☑   
     将一个复杂对象的构建与它的表示分离，使得同样的构建过程可以创建不同的表示。
 
-- [工厂模式FactoryMethod]()：
+- [工厂模式FactoryMethod](./4.工厂模式FactoryMethod.md)：☑   
     定义一个用于创建对象的接口，让子类决定哪一个类实例化。
 
 - [原型模式Prototype]()：
