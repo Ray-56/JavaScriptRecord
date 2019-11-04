@@ -1,142 +1,71 @@
-// const data = [
-//     { goodsId: 1, name: '货品1', sku: '颜色:红色,尺码:S', number: 1 },
-//     { goodsId: 1, name: '货品1', sku: '颜色:红色,尺码:M', number: 1 },
-//     { goodsId: 1, name: '货品1', sku: '颜色:红色,尺码:L', number: 1 },
-//     { goodsId: 3, name: '货品3', number: 10 },
-//     { goodsId: 2, name: '货品2', sku: '颜色:绿色,尺码:S', number: 1 },
-//     { goodsId: 2, name: '货品2', sku: '颜色:绿色,尺码:M', number: 1 },
-//     { goodsId: 2, name: '货品2', sku: '颜色:绿色,尺码:L', number: 1 },
-// ];
+/*
+给出两个 非空 的链表用来表示两个非负的整数。其中，它们各自的位数是按照 逆序 的方式存储的，并且它们的每个节点只能存储 一位 数字。
 
-// /**
-// * res
-// [
-//     { goodsId: 1, name: '货品1', '颜色': '红色', 'S': 1, 'M': 1, 'L': 1, number: 3 },
-//     { goodsId: 2, name: '货品2', '颜色': '绿色', 'S': 1, 'M': 1, 'L': 1, number: 3 },
-// ]
-// */
+如果，我们将这两个数相加起来，则会返回一个新的链表来表示它们的和。
 
+您可以假设除了数字 0 之外，这两个数都不会以 0 开头。
 
-// const map = {};
-// data.forEach((item, index) => {
-//     if (Reflect.has(item, 'sku') && item.sku) {
-//         const skuList = item.sku.split(',');
-//         const firstSku = skuList.splice(0, 1);
-//         const newItem = Object.assign(item, { sku: skuList.join(',') })
-//         if (!Reflect.has(map, firstSku)) {
-//             map[firstSku] = [newItem];
-//         } else {
-//             map[firstSku].push(newItem);
-//         }
-//     } else {
-//         map[`__${index}_${item.goodsId}`] = [item];
-//     }
+示例：
+
+输入：(2 -> 4 -> 3) + (5 -> 6 -> 4)
+输出：7 -> 0 -> 8
+原因：342 + 465 = 807
+*/
+
+function ListNode(val) {
+    this.val = val;
+    this.next = null;
+}
+
+function createList(numList) {
+    var next = new ListNode(numList.shift());
+    var cur = next;
     
-// });
-// console.log(map);
-
-// const res = [];
-// for (let key in map) {
-//     const value = map[key];
-//     if (!key.startsWith('__')) {
-//         const [firstSkuKey, firstSkuValue] = key.split(':');
-//         let skuData = { [firstSkuKey]: firstSkuValue };
-//         let number = 0;
-//         value.forEach(item => {
-//             number += item.number;
-//             const [skuKey, skuValue] = item.sku.split(':');
-//             skuData[skuValue] = item.number;
-//         });
-//         skuData.number = number;
-
-//         res.push(Object.assign({}, value[0], skuData));
-//     } else {
-//         res.push(value[0]);
-//     }
-// }
-// console.log(res);
-
-// add(1)(2)
-
-
-// function removeZero(arr) {
-//     let i = 0;
-//     let j = 0;
-
-//     while (j < arr.length) {
-//         console.log(j);
-//         if (arr[i] === 0) {
-//             if (arr[j] !== 0) {
-//                 [arr[i], arr[j]] = [arr[j], arr[i]];
-//                 i++;
-//             }
-//         } else {
-//             i++
-//         }
-//         j++
-//     }
-//     console.log(arr);
-// }
-
-// removeZero([0, 1, 0, 3, 12]);
-
-// 产品类
-class Product {
-    showProduct() {
-        console.log('name:', this._name);
-        console.log('name:', this._type);
+    while (numList.length) {
+        cur = new ListNode(numList.shift());
+        cur.next = next;
+        next = cur;
     }
-    setName(name) {
-        this._name = name;
-    }
-    setType(type) {
-        this._type = type;
-    }
+
+    return cur;
 }
+var list1 = createList([5]);
+var list2 = createList([5]);
 
-// 抽象建造者
-class Abstract {
-    constructor() {
-        if (new.target === Abstract) {
-            throw new TypeError('class Abstract该类为抽象类，不能实例化。')
+var addTwoNumbers = function(l1, l2) {
+    /**
+    * 两数和
+    * @param {ListNode} l1
+    * @param {ListNode} l2
+    * @return {ListNode}
+    */
+    
+    var res = new ListNode();
+    var cur = res;
+    var decade = 0;
+
+    while (l1 || l2 || decade) {
+        var num1 = l1 ? l1.val : 0;
+        var num2 = l2 ? l2.val : 0;
+        var val = num1 + num2 + decade;
+        
+        if (val > 9) {
+            cur.next = new ListNode(val % 10);
+            decade = 1;
+        } else {
+            cur.next = new ListNode(val);
+            decade = 0;
         }
-    }
-    setPart(arg1, arg2) {}
-    getProduct() {}
-}
 
-// 建造者
-class ConcreteBuilder extends Abstract {
-    constructor() {
-        super();
-        this._product = new Product();
+        if (l1) {
+            l1 = l1.next;
+        }
+        if (l2) {
+            l2 = l2.next;
+        }
+        cur = cur.next;
     }
 
-    getProduct() {
-        return this._product;
-    }
-
-    setPart(arg1, arg2) {
-        this._product.setName(arg1);
-        this._product.setType(arg2);
-    }
-}
-
-// 指挥者
-class Director {
-    constructor() {
-        this._builder = new ConcreteBuilder();
-    }
-    getProduct1() {
-        this._builder.setPart('奔驰', 'C200');
-        return this._builder.getProduct();
-    }
-    getProduct2() {
-        this._builder.setPart('奥迪', 'A8');
-        return this._builder.getProduct();
-    }
-}
-
-const director = new Director();
-console.log(director.getProduct1());
-console.log(director.getProduct2());
+    return res.next;
+};
+addTwoNumbers(list1, list2)

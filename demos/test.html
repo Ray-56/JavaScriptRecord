@@ -1,42 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Demo</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>auto complete</title>
+  <style>
+    bdi {
+      color: rgb(0, 136, 255);
+    }
+
+    li {
+      list-style: none;
+    }
+  </style>
 </head>
 <body>
-    <button id="login" data-demo="供..数值+2">login</button>
+  <input class="inp" type="text">
+  <section>
+    <ul class="container"></ul>
+  </section>
 </body>
 <script>
-console.log(document.querySelector(`[data-demo='供..数值+2']`))
-var createLoginLayer = (function() {
-    var div;
-    return function() {
-        if (!div) {
-            var div = document.createElement('div');
-            div.innerHTML = 'I`m login layer';
-            div.style.display = 'none';
-            document.body.appendChild(div);
-        }
-        return div;
+
+  function debounce(fn, timeout = 300) {
+    let t;
+    return (...args) => {
+      if (t) {
+        clearTimeout(t);
+      }
+      t = setTimeout(() => {
+        fn.apply(fn, args);
+      }, timeout);
     }
-})();
+  }
 
-var getSingle = function(fn) {
-    var res;
-    return function() {
-        res || (res = fn.apply(this, arguments));
-        return res;
+  function memorize(fn) {
+    const cache = new Map();
+    return (name) => {
+      if (!name) {
+        container.innerHTML = '';
+        return;
+      }
+      if (cache.get(name)) {
+        container.innerHTML = cache.get(name);
+        return;
+      }
+      const res = fn.call(fn, name).join('');
+      cache.set(name, res);
+      container.innerHTML = res;
     }
-}
+  }
 
-var createSingleLoginLayer = getSingle(createLoginLayer);
-
-document.querySelector('#login').onclick = function() {
-    var loginLayer = createSingleLoginLayer()
-    loginLayer.style.display = 'block'
-}
+  function handleInput(value) {
+    const reg = new RegExp(`\(${value}\)`);
+    const search = data.reduce((res, cur) => {
+      if (reg.test(cur)) {
+        const match = RegExp.$1;
+        res.push(`<li>${cur.replace(match, '<bdi>$&</bdi>')}</li>`);
+      }
+      return res;
+    }, []);
+    return search;
+  }
+  
+  const data = ["上海野生动物园", "上饶野生动物园", "北京巷子", "上海中心", "上海黄埔江", "迪士尼上海", "陆家嘴上海中心"]
+  const container = document.querySelector('.container');
+  const memorizeInput = memorize(handleInput);
+  document.querySelector('.inp').addEventListener('input', debounce(e => {
+    memorizeInput(e.target.value);
+  }))
 </script>
 </html>
